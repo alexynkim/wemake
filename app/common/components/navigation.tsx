@@ -6,8 +6,33 @@ import {
   NavigationMenuTrigger,
   NavigationMenuContent,
   NavigationMenuLink,
+  navigationMenuTriggerStyle,
 } from "~/common/components/ui/navigation-menu";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuGroup,
+} from "~/common/components/ui/dropdown-menu";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "~/common/components/ui/avatar";
 import { Separator } from "~/common/components/ui/separator";
+import { cn } from "~/lib/utils";
+import { Button } from "~/common/components/ui/button";
+import {
+  ChartColumnIncreasing,
+  UserRound,
+  SettingsIcon,
+  LogOutIcon,
+  BellIcon,
+  MessageSquareIcon,
+} from "lucide-react";
 
 const menus = [
   {
@@ -120,46 +145,163 @@ const menus = [
   },
 ];
 
-export default function Navigation() {
+export default function Navigation({
+  isLoggedin,
+  hasNotification,
+  hasMessages,
+}: {
+  isLoggedin: boolean;
+  hasNotification: boolean;
+  hasMessages: boolean;
+}) {
   return (
     <nav className="flex px-10 py-4 h-16 justify-between items-center backdrop-blur fixed top-0 left-0 right-0 z-50 bg-background/50">
-      <div className="flex items-center">
-        <Link to="/" className="text-xl font-bold">
-          WeMake
-        </Link>
+      <div className="flex">
+        <div className="flex items-center">
+          <Link to="/" className="text-xl font-bold">
+            WeMake
+          </Link>
+        </div>
+
+        <Separator orientation="vertical" className="h-4 py-4 mx-4" />
+
+        <NavigationMenu>
+          <NavigationMenuList>
+            {menus.map((menu) => {
+              return (
+                <NavigationMenuItem key={menu.name}>
+                  {menu.items ? (
+                    <>
+                      <Link to={menu.to}>
+                        <NavigationMenuTrigger>
+                          {menu.name}
+                        </NavigationMenuTrigger>
+                      </Link>
+                      <NavigationMenuContent>
+                        <ul className="grid grid-cols-2 font-light gap-2 p-2 w-[500px]">
+                          {menu.items?.map((item) => {
+                            return (
+                              <NavigationMenuItem
+                                key={item.name}
+                                className={cn([
+                                  "block p-2 rounded-md transition-colors",
+                                  (item.to === "/products/promote" ||
+                                    item.to === "/jobs/submit") &&
+                                    "col-span-2",
+                                ])}
+                              >
+                                <NavigationMenuLink
+                                  asChild
+                                  className={cn([
+                                    "block p-3 hover:bg-accent focus:bg-accent",
+                                    (item.to === "/products/promote" ||
+                                      item.to === "/jobs/submit") &&
+                                      "bg-primary/10 hover:bg-primary/30 focus:bg-primary/30",
+                                  ])}
+                                >
+                                  <Link to={item.to}>
+                                    <span className="text-sm">{item.name}</span>
+                                    <p className="text-sm text-muted-foreground">
+                                      {item.description}
+                                    </p>
+                                  </Link>
+                                </NavigationMenuLink>
+                              </NavigationMenuItem>
+                            );
+                          })}
+                        </ul>
+                      </NavigationMenuContent>
+                    </>
+                  ) : (
+                    <>
+                      <Link
+                        to={menu.to}
+                        className={cn(navigationMenuTriggerStyle(), "px-4")}
+                      >
+                        {menu.name}
+                      </Link>
+                    </>
+                  )}
+                </NavigationMenuItem>
+              );
+            })}
+          </NavigationMenuList>
+        </NavigationMenu>
       </div>
 
-      <Separator orientation="vertical" className="h-4 mx-4" />
-
-      <NavigationMenu>
-        <NavigationMenuList>
-          {menus.map((menu) => {
-            return (
-              <NavigationMenuItem key={menu.name}>
-                <NavigationMenuTrigger>{menu.name}</NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid grid-cols-2 gap-2 w-[500px]">
-                    {menu.items?.map((item) => {
-                      return (
-                        <li key={item.name}>
-                          <NavigationMenuLink asChild>
-                            <Link to={item.to}>
-                              <span className="">{item.name}</span>
-                              <p className="text-sm text-muted-foreground">
-                                {item.description}
-                              </p>
-                            </Link>
-                          </NavigationMenuLink>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-            );
-          })}
-        </NavigationMenuList>
-      </NavigationMenu>
+      {isLoggedin ? (
+        <div className="flex items-center gap-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Avatar>
+                <AvatarImage src="https://github.com/alexynkim.png" />
+                <AvatarFallback>N</AvatarFallback>
+              </Avatar>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-48">
+              <DropdownMenuLabel className="flex flex-col">
+                <span className="text-sm font-medium">Alex Kim</span>
+                <span className="text-xs text-muted-foreground">@username</span>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <Link to="/auth/dashboard">
+                    <ChartColumnIncreasing className="size-4 mr-2" />
+                    <span>Dashboard</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <Link to="/auth/profile">
+                    <UserRound className="size-4 mr-2" />
+                    <span>Profile</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <Link to="/auth/settings">
+                    <SettingsIcon className="size-4 mr-2" />
+                    <span>Settings</span>
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <Link to="/auth/logout">
+                    <LogOutIcon className="size-4 mr-2" />
+                    <span>Logout</span>
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <Button size="icon" variant="ghost" asChild>
+            <Link to="/my/notifications" className="relative">
+              <BellIcon className="size-5" />
+              {hasNotification && (
+                <div className="absolute top-0.5 right-0.5 size-2 bg-red-500 rounded-full"></div>
+              )}
+            </Link>
+          </Button>
+          <Button size="icon" variant="ghost" asChild>
+            <Link to="/my/messages" className="relative">
+              <MessageSquareIcon className="size-5" />
+              {hasMessages && (
+                <div className="absolute top-0.5 right-0.5 size-2 bg-red-500 rounded-full"></div>
+              )}
+            </Link>
+          </Button>
+        </div>
+      ) : (
+        <div className="flex items-center gap-4">
+          <Button asChild variant="secondary">
+            <Link to="/auth/login">Login</Link>
+          </Button>
+          <Button asChild>
+            <Link to="/auth/join">Join</Link>
+          </Button>
+        </div>
+      )}
     </nav>
   );
 }
