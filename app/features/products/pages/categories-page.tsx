@@ -1,30 +1,52 @@
 import React from "react";
-import { Link } from "react-router";
+import { Hero } from "~/common/components/hero";
+import { CategoryCard } from "../components/category-card";
+import type { Route } from "./+types/categories-page";
+
+export const meta: Route.MetaFunction = () => {
+  return [
+    { title: "Categories | Wemake" },
+    { name: "description", content: "Browse our product categories" },
+  ];
+};
 
 export default function CategoriesPage() {
   const categories = [
-    "Technology",
-    "Design",
-    "Productivity",
-    "Education",
-    "Entertainment",
-    "Health",
-    "Finance",
-    "Social",
+    {
+      name: "Technology",
+      description: "Technology to make your life easier",
+    },
+    {
+      name: "Design",
+      description: "Design to make your life easier",
+    },
+    {
+      name: "Productivity",
+      description: "Productivity to make your life easier",
+    },
+    {
+      name: "Education",
+      description: "Education to make your life easier",
+    },
+    {
+      name: "Entertainment",
+      description: "Entertainment to make your life easier",
+    },
   ];
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Product Categories</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="space-y-10">
+      <Hero
+        title="Product Categories"
+        description="Browse our product categories"
+      />
+      <div className="grid grid-cols-3 gap-4">
         {categories.map((category) => (
-          <Link
-            key={category}
-            to={`/products/categories/${category.toLowerCase()}`}
-            className="p-4 border rounded-lg hover:bg-gray-50"
-          >
-            <h2 className="text-xl font-semibold">{category}</h2>
-          </Link>
+          <CategoryCard
+            key={category.name}
+            name={category.name}
+            description={category.description}
+          />
         ))}
       </div>
     </div>

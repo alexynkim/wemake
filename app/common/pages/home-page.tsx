@@ -1,6 +1,5 @@
 import { Link } from "react-router";
 import React from "react";
-import type { MetaFunction } from "react-router";
 
 import { Button } from "~/common/components/ui/button";
 
@@ -10,16 +9,18 @@ import { IdeaCard } from "~/features/ideas/components/idea-card";
 import { JobCard } from "~/features/jobs/components/job-card";
 import { TeamCard } from "~/features/teams/components/team-card";
 
-export const meta: MetaFunction = () => {
+import type { Route } from "./+types/home-page";
+
+export const meta: Route.MetaFunction = () => {
   return [
     { title: "Home:WeMake" },
     { name: "description", content: "Welcome to WeMake" },
   ];
 };
 
-const HomePage: React.FC = () => {
+const HomePage = () => {
   return (
-    <div className="px-10 py-20">
+    <div className="">
       <div className="grid grid-cols-3 gap-4">
         <div>
           <h2 className="text-4xl font-bold mb-2 leading-tight tracking-tight">

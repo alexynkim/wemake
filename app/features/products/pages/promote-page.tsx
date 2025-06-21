@@ -1,83 +1,62 @@
-import React, { useState } from "react";
+import { Hero } from "~/common/components/hero";
+import type { Route } from "./+types/promote-page";
+import { SelectPair } from "~/common/components/select-pair";
+import { Form } from "react-router";
+import { Calendar } from "~/common/components/ui/calendar";
+import { useState } from "react";
+import type { DateRange } from "react-day-picker";
+
+export const meta: Route.MetaFunction = () => {
+  return [
+    { title: "Promote Product" },
+    { name: "description", content: "Promote Product" },
+  ];
+};
 
 export default function PromotePage() {
-  const [formData, setFormData] = useState({
-    productId: "",
-    promotionType: "",
-    budget: "",
-    duration: "",
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
+    from: new Date(),
+    to: new Date(),
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle form submission
-  };
-
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Promote Your Product</h1>
-      <form onSubmit={handleSubmit} className="max-w-2xl">
-        <div className="mb-4">
-          <label className="block mb-2">Product ID</label>
-          <input
-            type="text"
-            value={formData.productId}
-            onChange={(e) =>
-              setFormData({ ...formData, productId: e.target.value })
-            }
-            className="w-full p-2 border rounded"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-2">Promotion Type</label>
-          <select
-            value={formData.promotionType}
-            onChange={(e) =>
-              setFormData({ ...formData, promotionType: e.target.value })
-            }
-            className="w-full p-2 border rounded"
-            required
-          >
-            <option value="">Select promotion type</option>
-            <option value="featured">Featured Listing</option>
-            <option value="banner">Banner Advertisement</option>
-            <option value="newsletter">Newsletter Promotion</option>
-          </select>
-        </div>
-        <div className="mb-4">
-          <label className="block mb-2">Budget (USD)</label>
-          <input
-            type="number"
-            value={formData.budget}
-            onChange={(e) =>
-              setFormData({ ...formData, budget: e.target.value })
-            }
-            className="w-full p-2 border rounded"
-            min="0"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-2">Duration (days)</label>
-          <input
-            type="number"
-            value={formData.duration}
-            onChange={(e) =>
-              setFormData({ ...formData, duration: e.target.value })
-            }
-            className="w-full p-2 border rounded"
-            min="1"
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
-        >
-          Start Promotion
-        </button>
-      </form>
+    <div className="space-y-5">
+      <Hero
+        title="Promote Your Product"
+        description="Boost your product visibility"
+      />
+      <Form className="flex flex-col mx-auto max-w-sm">
+        <SelectPair
+          label="Select a Product"
+          description="Select a product you want to promote"
+          name="product"
+          required
+          placeholder="Select a product"
+          options={[
+            { label: "AI Dark mode maker", value: "ai-dark-mode-maker" },
+            { label: "AI Image generator", value: "ai-image-generator" },
+            { label: "Text to image", value: "text-to-image" },
+            { label: "Video transformer", value: "video-transformer" },
+            { label: "AI Tools for Other", value: "ai-tools-other" },
+          ]}
+        />
+      </Form>
+      <div>
+        <Calendar
+          mode="range"
+          selected={dateRange}
+          onSelect={setDateRange}
+          className="mx-auto"
+        />
+        {dateRange?.from && (
+          <div className="mt-4 text-center">
+            <p className="text-sm text-muted-foreground">
+              Selected range: {dateRange.from.toLocaleDateString()}
+              {dateRange.to && ` - ${dateRange.to.toLocaleDateString()}`}
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
