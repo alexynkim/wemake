@@ -33,6 +33,7 @@ import {
   BellIcon,
   MessageSquareIcon,
 } from "lucide-react";
+import { ThemeSelector } from "~/common/components/theme-selector";
 
 const menus = [
   {
@@ -231,6 +232,7 @@ export default function Navigation({
 
       {isLoggedin ? (
         <div className="flex items-center gap-2">
+          <ThemeSelector />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Avatar>
@@ -294,6 +296,7 @@ export default function Navigation({
         </div>
       ) : (
         <div className="flex items-center gap-4">
+          <ThemeSelector />
           <Button asChild variant="secondary">
             <Link to="/auth/login">Login</Link>
           </Button>

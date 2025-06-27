@@ -11,6 +11,7 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import Navigation from "./common/components/navigation";
 import { Settings } from "luxon";
+import { ThemeProvider } from "~/hooks/use-theme";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -48,10 +49,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <div className="py-28">
-      <Navigation isLoggedin={true} hasNotification={true} hasMessages={true} />
-      <Outlet />
-    </div>
+    <ThemeProvider>
+      <div className="py-28">
+        <Navigation
+          isLoggedin={true}
+          hasNotification={true}
+          hasMessages={true}
+        />
+        <Outlet />
+      </div>
+    </ThemeProvider>
   );
 }
 
